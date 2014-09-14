@@ -11,7 +11,7 @@ static const GPathInfo HOUR_HAND_POINTS = {
   }
 };
 
-#define CENTER_X 72
+#define CENTER_X 71
 #define BORDER_Y 167
 static const GPathInfo MIDNIGHT_POINTS = {
   3,

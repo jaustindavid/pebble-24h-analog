@@ -36,25 +36,31 @@ static void bg_update_proc(Layer *layer, GContext *ctx) {
   gpath_draw_filled(ctx, noon);
 
   center.x -= 1;
-  const int16_t faceWidth = bounds.size.w / 2 + 8;
-  for (int i = 1; i < 24; i++) {
+  const int16_t faceWidth = bounds.size.w / 2 + 4;
+  for (int i = 1; i < 48; i++) {
     GPoint tickOuter, tickInner;
-    if (i == 12) {
+    if (i == 24) {
       continue;
     } 
-    const int32_t tick_angle = TRIG_MAX_ANGLE * i / 24;
-    int16_t tickLength = 8;
-    if (i % 2 == 0) { // evens == 12
-      tickLength += 4;
-    }
-    if (i % 6 == 0) { // quarters == 16
-      tickLength += 4;
-    }
+    const int32_t tick_angle = TRIG_MAX_ANGLE * i / 48;
     tickOuter.x = (int16_t)(sin_lookup(tick_angle) * (int32_t)faceWidth / TRIG_MAX_RATIO) + center.x;
+    if (tickOuter.x < 0) tickOuter.x = 0;
+    if (tickOuter.x > 143) tickOuter.x = 143;
     tickOuter.y = (int16_t)(-cos_lookup(tick_angle) * (int32_t)faceWidth / TRIG_MAX_RATIO) + center.y;
-    tickInner.x = (int16_t)(sin_lookup(tick_angle) * (int32_t)(faceWidth - tickLength)/ TRIG_MAX_RATIO) + center.x;
-    tickInner.y = (int16_t)(-cos_lookup(tick_angle) * (int32_t)(faceWidth - tickLength)/ TRIG_MAX_RATIO) + center.y;
-    graphics_draw_line(ctx, tickInner, tickOuter);
+    if (i % 2 == 1) {
+      graphics_draw_pixel(ctx, tickOuter);
+    } else {
+      int16_t tickLength = 6;
+      if (i % 4 == 0) { // even hours == 12
+        tickLength += 4;
+      } 
+      if (i % 12 == 0) { // 6 hours == 16
+        tickLength += 8;
+      }
+      tickInner.x = (int16_t)(sin_lookup(tick_angle) * (int32_t)(faceWidth - tickLength)/ TRIG_MAX_RATIO) + center.x;
+      tickInner.y = (int16_t)(-cos_lookup(tick_angle) * (int32_t)(faceWidth - tickLength)/ TRIG_MAX_RATIO) + center.y;
+      graphics_draw_line(ctx, tickInner, tickOuter);
+    }
   }
 }
 
