@@ -7,7 +7,7 @@ static const GPathInfo HOUR_HAND_POINTS = {
     {-8,  0 },
     { 0,  16},
     { 8,  0 },
-    { 0, -64 }
+    { 0, -72 }
   }
 };
 
