@@ -77,7 +77,8 @@ static void hands_update_proc(Layer *layer, GContext *ctx) {
   #ifdef DEBUG
   gpath_rotate_to(hour_arrow, (TRIG_MAX_ANGLE * t->tm_sec / 60));
   #else
-  gpath_rotate_to(hour_arrow, (TRIG_MAX_ANGLE * ((t->tm_hour * 6) + (t->tm_min / 10))) / (24 * 6));
+  // gpath_rotate_to(hour_arrow, (TRIG_MAX_ANGLE * ((t->tm_hour * 6) + (t->tm_min / 10))) / (24 * 6));
+  gpath_rotate_to(hour_arrow, (TRIG_MAX_ANGLE * (t->tm_hour + 1.0*t->tm_min/60) / 24));
   #endif
   gpath_draw_filled(ctx, hour_arrow);
   gpath_draw_outline(ctx, hour_arrow);
@@ -98,6 +99,10 @@ static void date_update_proc(Layer *layer, GContext *ctx) {
 
 static void handle_tick(struct tm *tick_time, TimeUnits units_changed) {
   layer_mark_dirty(window_get_root_layer(window));
+  if (tick_time->tm_min == 0) {
+    // short pulse on the hour
+    vibes_short_pulse();
+  }
 }
 
 static void window_load(Window *window) {
